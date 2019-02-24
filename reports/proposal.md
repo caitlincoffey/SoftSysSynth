@@ -2,7 +2,7 @@
 ### Team Members: Diego Berny, Emma Pan, Manu Patil
 
 ## GOAL
-Our team wishes to learn more about how C interacts with hardware using arduino microcontrollers. <br><br>
+Our team wishes to learn more about how C interacts with hardware using arduino microcontrollers. <br>
 **Lower Bound**: Make a sound <br>
 **Upper Bound**: Play a song
 
