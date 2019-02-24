@@ -1,4 +1,6 @@
-# Documentation Links
+# Documentation Links and Useful Resources
+
+Arduino sound synthesis: using Arduino to generate an audible waveform, and manipulate it in real time.
 
 [Old Synth Project Description](https://sites.google.com/site/softwaresystems2015/backlog/projects)
 
@@ -12,4 +14,4 @@
 
 [Article on Arduino Sound Synthesis](https://makezine.com/projects/make-35/advanced-arduino-sound-synthesis/)
 
-Arduino sound synthesis: using Arduino to generate an audible waveform, and manipulate it in real time.
+
