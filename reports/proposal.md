@@ -2,14 +2,14 @@
 ### Team Members: Diego Berny, Emma Pan, Manu Patil
 
 ## GOAL
-Our team wishes to learn more about how C interacts with hardware using arduino microcontrollers. <br>
-Lower Bound: Make a sound <br>
-Upper Bound: Play a song
+Our team wishes to learn more about how C interacts with hardware using arduino microcontrollers. <br><br>
+**Lower Bound**: Make a sound <br>
+**Upper Bound**: Play a song
 
 ## Learning Goals
-Diego: Become more proficient with C and learn how it interfaces with hardware <br>
-Emma: Become more comfortale with C and learn how to make noises with an Arduino <br>
-Manu: Learn more about about C through especially when it comes to Arduino programming. 
+**Diego**: Become more proficient with C and learn how it interfaces with hardware <br>
+**Emma**: Become more comfortale with C and learn how to make noises with an Arduino <br>
+**Manu**: Learn more about about C through especially when it comes to Arduino programming. 
 
 ## What we need
 We are following the instructions for the previous SoftSysSynth. We have already acquired the materials for this project.
