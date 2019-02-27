@@ -46,17 +46,28 @@ void writeByte(int x) {
 
 int low = 36;
 int high = 255;
-int stride = 5;
+int stride = 1;
 int counter = low;
 
 void loop() {
   int button1 = digitalRead(buttonPin1);
-  if (button1) return;
+//  Serial.println(button1);
+//  int button2 = digitalRead(buttonPin2);
+
+  if (button1){
+//    stride = 5;
+    return;
+  }
+//  else if (button2) {
+//    stride = 10;
+//    return;
+//  }
+  
   
   counter += stride;
   if (counter > high) {
     counter = low;
-    //Serial.println(counter);
+    Serial.println(counter);
   }
 
   // write to the digital pins  
