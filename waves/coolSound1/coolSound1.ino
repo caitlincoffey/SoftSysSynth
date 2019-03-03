@@ -1,5 +1,5 @@
 /*
-  
+  Adjust length
 
  Author: Allen Downey 
  
@@ -20,9 +20,12 @@ int buttonPin2 = 3;
 #define PI2     6.283185 // 2 * PI - saves calculating it later
 #define AMP     127      // Multiplication factor for the sine wave
 #define OFFSET  128      // Offset shifts wave to just positive values
-#define LENGTH  4  // The length of the waveform lookup table
+#define LENGTH  8  // The length of the waveform lookup table
 
+#define SPEED   600
 
+int sounds[] = {2, 4, 6, 8, 10, 4, 6, 7};
+int soundCounter = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -78,15 +81,22 @@ void loop() {
 //  }
   
   if (!button2) {
+    soundCounter++;
+    
 //    stride = 5;
 //    counter += stride;
-    sincount = (AMP*sin((PI2/LENGTH)*counter));  // Calculate current entry
+    sincount = (AMP*sin((PI2/sounds[soundCounter/SPEED])*counter));  // Calculate current entry
     sincount = int(sincount+OFFSET);
 //    Serial.println(counter);
     counter++;
     if (counter > high) {
     counter = low;
    }
+
+   if (soundCounter > SPEED*8) {
+    soundCounter = 0;
+   }
+   
 
     // write to the digital pins  
     writeByte(sincount);
