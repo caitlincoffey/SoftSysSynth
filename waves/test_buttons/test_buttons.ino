@@ -20,8 +20,8 @@
  
  
 int ledPin = 5;       // select the pin for the LED
-int buttonPin1 = 4;
-int buttonPin2 = 5;
+int buttonPin1 = 5;
+int buttonPin2 = 4;
 int buttonPin3 = 3;
 int buttonPin4 = 2;
 int buttonPin5 = 1;
@@ -30,25 +30,31 @@ int buttonPin6 = 0;
 #define PI2     6.283185 // 2 * PI - saves calculating it later
 #define AMP     60      // Multiplication factor for the sine wave = Volume
 #define OFFSET  128      // Offset shifts wave to just positive values
-#define LENGTH  8  // The length of the waveform lookup table
+#define LENGTH  1  // The length of the waveform lookup table
 
-#define SPEED   1
+#define SPEED   10000 // Changes duration of note
 
 // 10 = C5, but a little flat
 
-float sounds1[] = {10};
-float sounds2[] = {20};
-float sounds3[] = {30};
-float sounds4[] = {20};
-float sounds5[] = {30};
-float sounds6[] = {30};
+// These are the sound arrays that determine what notes the buttons (pins 0-5) will play
+float sounds1[] = {3.2};
+float sounds2[] = {3.3}; // 5 = A in tuner
+float sounds3[] = {3.7, 4, 6};
+float sounds4[] = {4.6, 5, 8};
+float sounds5[] = {4.8, 12, 13};
+float sounds6[] = {5, 20, 10, 8};
 int soundCounter = 0;
 
 void setup() {
   Serial.begin(9600);
-  
+
+// Very IMPORTANT to do this
   pinMode(buttonPin1, INPUT_PULLUP);  
-  pinMode(buttonPin2, INPUT_PULLUP);  
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(buttonPin3, INPUT_PULLUP);  
+  pinMode(buttonPin4, INPUT_PULLUP); 
+  pinMode(buttonPin5, INPUT_PULLUP); 
+  pinMode(buttonPin6, INPUT_PULLUP); 
 
   pinMode(ledPin, OUTPUT);
   
@@ -65,6 +71,7 @@ void setup() {
 }
 
 void writeByte(int x) {
+//  Actually writes the sound in binary
   int pin;
   
   for (pin=13; pin>=6; pin--) {
@@ -73,16 +80,21 @@ void writeByte(int x) {
   }
 }
 
-int low = 36;
+int low = 0;
 int high = 255;
 //low = 18, high = 36 for techno sound
-int stride = 5;
 int counter = low;
 
 float sincount = 0;
 
 
 void playSound(float sounds[]){
+//  soundCounter: iterates through array of notes (sounds)
+//  sincount: position in sine wave 
+//  count: steps through sine wave
+//  SPEED: affects how long it will spend playing each note
+//  high/low: affect bounds of sound pitch
+
     soundCounter++;
     sincount = (AMP*sin((PI2/sounds[soundCounter/SPEED])*counter));  // Calculate current entry
     sincount = int(sincount+OFFSET);

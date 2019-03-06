@@ -76,7 +76,6 @@ void writeByte(int x) {
 int low = 36;
 int high = 255;
 //low = 18, high = 36 for techno sound
-int stride = 5;
 int counter = low;
 
 float sincount = 0;
