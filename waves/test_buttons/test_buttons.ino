@@ -1,14 +1,7 @@
 /*
   Adjust length
 
- Author: Allen Downey 
- 
- Based on http://arduino.cc/en/Tutorial/AnalogInput
- Created by David Cuartielles
- modified 30 Aug 2011
- By Tom Igoe
-
- License: Public Domain
+ Author: Diego Berny, Emma Pan, Manu Patil
 
 
  Input from Midi File: 
@@ -18,15 +11,6 @@
  
  */
  
- 
-int ledPin = 5;       // select the pin for the LED
-int buttonPin1 = 5;
-int buttonPin2 = 4;
-int buttonPin3 = 3;
-int buttonPin4 = 2;
-int buttonPin5 = 1;
-int buttonPin6 = 0;
-
 #define PI2     6.283185 // 2 * PI - saves calculating it later
 #define AMP     60      // Multiplication factor for the sine wave = Volume
 #define OFFSET  128      // Offset shifts wave to just positive values
@@ -34,15 +18,23 @@ int buttonPin6 = 0;
 
 #define SPEED   10000 // Changes duration of note
 
+
+int ledPin = 5;       // select the pin for the LED
+int buttonPin1 = 5;
+int buttonPin2 = 4;
+int buttonPin3 = 3;
+int buttonPin4 = 2;
+int buttonPin5 = 1;
+int buttonPin6 = 0;
 // 10 = C5, but a little flat
 
 // These are the sound arrays that determine what notes the buttons (pins 0-5) will play
-float sounds1[] = {3.2};
-float sounds2[] = {3.3}; // 5 = A in tuner
-float sounds3[] = {3.7, 4, 6};
-float sounds4[] = {4.6, 5, 8};
-float sounds5[] = {4.8, 12, 13};
-float sounds6[] = {5, 20, 10, 8};
+float sounds1[] = {5};
+float sounds2[] = {5}; // 5 = A in tuner
+float sounds3[] = {3.6};
+float sounds4[] = {3.8};
+float sounds5[] = {4.0};
+float sounds6[] = {4.2};
 int soundCounter = 0;
 
 void setup() {
@@ -66,6 +58,8 @@ void setup() {
   pinMode(8, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(6, OUTPUT);
+  
+  pinMode(A0, INPUT);
 
   writeByte(36);
 }
@@ -88,7 +82,7 @@ int counter = low;
 float sincount = 0;
 
 
-void playSound(float sounds[]){
+void playSound(float sounds[], int amp){
 //  soundCounter: iterates through array of notes (sounds)
 //  sincount: position in sine wave 
 //  count: steps through sine wave
@@ -96,7 +90,7 @@ void playSound(float sounds[]){
 //  high/low: affect bounds of sound pitch
 
     soundCounter++;
-    sincount = (AMP*sin((PI2/sounds[soundCounter/SPEED])*counter));  // Calculate current entry
+    sincount = (amp * sin((PI2/sounds[soundCounter/SPEED])*counter));  // Calculate current entry
     sincount = int(sincount+OFFSET);
     counter++;
     if (counter > high) {
@@ -114,39 +108,40 @@ void playSound(float sounds[]){
 
 void loop() {
   int button1 = digitalRead(buttonPin1);
-//  Serial.println(button1);
   int button2 = digitalRead(buttonPin2);
-//  Serial.println(button2);
-
   int button3 = digitalRead(buttonPin3);
   int button4 = digitalRead(buttonPin4);
   int button5 = digitalRead(buttonPin5);
-  int button6 = digitalRead(buttonPin6);
+  int button6 = digitalRead(buttonPin6); //Take 4.78 nanoseconds
+  int volume = 100;
+  
   
   if (!button1){
-    playSound(sounds1);
-
+    volume = analogRead(A0)/4; //Takes 100 nanoseconds
+    // Serial.println(volume);
+    playSound(sounds1, volume);
+    
   }
   
   if (!button2) {
-    playSound(sounds2);
+    playSound(sounds2, volume);
     
   }
   
   if (!button3) {
-    playSound(sounds3);
+    playSound(sounds3, volume);
     
   }
   if (!button4) {
-    playSound(sounds4);
+    playSound(sounds4, volume);
     
   }
   if (!button5) {
-    playSound(sounds5);
+    playSound(sounds5, volume);
     
   }
   if (!button6) {
-    playSound(sounds6);
+    playSound(sounds6, volume);
     
   }  
   else {
