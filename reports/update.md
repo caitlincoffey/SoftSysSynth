@@ -23,17 +23,17 @@ ___
 
 ## Tasks
 We are currently working on cleaning up the sound coming from our buzzer. We plan to do some sort of filtering analysis. We are also working on playing CSV files through an array. Here are some of the tasks set up for the upcoming week: <br><br>
-Manu : 
+* Manu:
      - Figure out low pass filter to clean up signal
      - Learn about square waves, and create a method for them in our code
 
-<br> Emma
+* Emma:
      - Learn about protothreads, and experiment to see if that can be used to fix our pitch bending problem.
      - Learn about ramp waves, and create a method for them in our code
-<br> Diego
+* Diego:
      - Reading in csv files to arduino. Possibly with a header file and external variables.
      - Learn about triangle waves, and create a method for them in our code
-<br> All
+* All
      - Clean up code in our repo
 
 <br> A description of the original project can be found here:
