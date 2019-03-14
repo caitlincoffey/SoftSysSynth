@@ -11,7 +11,7 @@ ___
 
 ## Learning Goals
 **Diego**: Become more proficient with C and learn how it interfaces with hardware <br>
-**Emma**: Become more comfortale with C and learn how to make noises with an Arduino <br>
+**Emma**: Become more comfortable with C and learn how to make noises with an Arduino <br>
 **Manu**: Learn more about about C through especially when it comes to Arduino programming. <br>
 
 ___
