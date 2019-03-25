@@ -18,10 +18,16 @@
 
 #define SPEED   10000 // Changes duration of note
 
+
+// Voltage Cutoff below this. 
+  int low = 36;
+  int high = 255;
+  int counter = low;
+
 /******** Lookup table ********/
 #define LENGTH  256  // The length of the waveform lookup table
 byte squarewave[LENGTH];   // Storage for the waveform
-byte sinewave[LENGTH];
+byte sinewave[LENGTH];// 255-36+1
 byte triwave[LENGTH];
 byte rampwave[LENGTH];
 byte sawwave[LENGTH];
@@ -73,8 +79,8 @@ void setup() {
   }
   
   // Initalizing sine wave array, by scaling the sine wave to the appropriate period
-  for (int i=0; i<LENGTH; i++) 
-      {float v = OFFSET+(AMP*sin((PI2/LENGTH)*i));
+  for (int i=low; i<high-low; i++) 
+      {float v = ((high-low+1)/2)+(50*sin((PI2/(high-low+1))*i));
       sinewave[i]=int(v);
    }
 
@@ -108,10 +114,6 @@ void writeByte(byte x) {
     x >>= 1;
   }
 }
-// Voltage Cutoff below this. 
-int low = 36;
-int high = 255;
-int counter = low;
 
 void playSound(byte sounds[], int amp){
 //  soundCounter: iterates through array of notes (sounds)
