@@ -10,13 +10,11 @@
  - sounds[] array
  
  */
- 
+
+ //Constants
 #define PI2     6.283185 // 2 * PI - saves calculating it later
 #define AMP     128      // Multiplication factor for the sine wave = Volume
 #define OFFSET  128      // Offset shifts wave to just positive values
-//#define LENGTH / 1  // The length of the waveform lookup table
-
-#define SPEED   10000 // Changes duration of note
 
 
 // Voltage Cutoff below this. 
@@ -29,7 +27,7 @@
 byte squarewave[LENGTH];   // Storage for the waveform
 byte sinewave[LENGTH];// 255-36+1
 byte triwave[LENGTH];
-byte rampwave[LENGTH];
+byte rampwave[255-36];
 byte sawwave[LENGTH];
 
 int buttonPin1 = 5;
@@ -38,15 +36,7 @@ int buttonPin3 = 3;
 int buttonPin4 = 2;
 int buttonPin5 = 1;
 int buttonPin6 = 0;
-// 10 = C5, but a little flat
 
-// These are the sound arrays that determine what notes the buttons (pins 0-5) will play
-float sounds1[] = {20};
-float sounds2[] = {200}; // 5 = A in tuner
-float sounds3[] = {2000};
-float sounds4[] = {20};
-float sounds5[] = {200};
-float sounds6[] = {2000};
 int soundCounter = 0;
 
 void setup() {
@@ -79,13 +69,15 @@ void setup() {
   }
   
   // Initalizing sine wave array, by scaling the sine wave to the appropriate period
-  for (int i=low; i<high-low; i++) 
-      {float v = ((high-low+1)/2)+(50*sin((PI2/(high-low+1))*i));
+  int offset = (high-low)/2;
+  for (int i=0; i<LENGTH; i++) 
+      {float v = OFFSET+(50*sin((PI2/LENGTH)*i));
       sinewave[i]=int(v);
+
    }
 
    // Initialize ramp wave array
-   for (int i=0; i<LENGTH; i++) {
+   for (int i=low; i<high-low; i++) {
       rampwave[i]=i;
     }
 
@@ -99,8 +91,8 @@ void setup() {
     }
 
     // Saw wave
-    for (int i = LENGTH-1; i>0; i--) {
-      sawwave[i]=i;
+    for (int i=0; i<LENGTH; i++) {
+      sawwave[LENGTH-1-i]=i;
     }
     
 }
@@ -115,19 +107,13 @@ void writeByte(byte x) {
   }
 }
 
-void playSound(byte sounds[], int amp){
-//  soundCounter: iterates through array of notes (sounds)
-//  sincount: position in sine wave 
-//  count: steps through sine wave
-//  SPEED: affects how long it will spend playing each note
-//  high/low: affect bounds of sound pitch
-//  increment: how many samples of the sin wave are taken
-
+void playSound(byte sounds[]){
+  // sounds byte array: wave shape
     counter++;
 
     
     if (counter > high) {
-    counter = low;
+    counter = 0;
     }
 
     // write to the digital pins  
@@ -143,34 +129,33 @@ void loop() {
   int button4 = digitalRead(buttonPin4);
   int button5 = digitalRead(buttonPin5);
   int button6 = digitalRead(buttonPin6); //Take 4.78 nanoseconds
-  int volume = 128;
+
   
   
   if (!button1){
-//    volume = analogRead(A0)/8; //Takes 100 nanoseconds
-    playSound(sinewave, volume);
+    playSound(sinewave);
     
   }
   
   if (!button2) {
-    playSound(triwave, volume);
+    playSound(triwave);
     
   }
   
   if (!button3) {
-    playSound(sawwave, volume);
+    playSound(sawwave);
     
   }
   if (!button4) {
-    playSound(rampwave, volume);
+    playSound(rampwave);
     
   }
   if (!button5) {
-    playSound(squarewave, volume);
+    playSound(squarewave);
     
   }
   if (!button6) {
-    playSound(sinewave, volume);
+    playSound(sinewave);
     
   }  
   else {
