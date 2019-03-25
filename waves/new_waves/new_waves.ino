@@ -12,7 +12,7 @@
  */
  
 #define PI2     6.283185 // 2 * PI - saves calculating it later
-#define AMP     10      // Multiplication factor for the sine wave = Volume
+#define AMP     128      // Multiplication factor for the sine wave = Volume
 #define OFFSET  128      // Offset shifts wave to just positive values
 //#define LENGTH / 1  // The length of the waveform lookup table
 
@@ -111,11 +111,7 @@ void writeByte(byte x) {
 // Voltage Cutoff below this. 
 int low = 36;
 int high = 255;
-
 int counter = low;
-
-float sincount = 0;
-
 
 void playSound(byte sounds[], int amp){
 //  soundCounter: iterates through array of notes (sounds)
@@ -135,33 +131,6 @@ void playSound(byte sounds[], int amp){
     // write to the digital pins  
     writeByte(sounds[counter]);
 }
-
-void playSin(float sounds[], int amp /*, int increment*/){
-    /*
-      soundCounter: iterates through array of notes (sounds)
-      sincount: position in sine wave 
-      count: steps through sine wave
-      SPEED: affects how long it will spend playing each note
-      high/low: affect bounds of sound pitch
-      increment: how many samples of the sin wave are taken
-    */
-    
-    soundCounter++;
-//    sincount = (amp * sin((2*PI/sounds[soundCounter/SPEED])*counter));  // Calculate current entry
-    sincount = (amp * sin(sounds[0]*2*PI*counter/255));
-    sincount = int(sincount+OFFSET);
-    counter += 1;
-    if (counter > high) {
-    counter = low;
-    }
-//  Reset the counter
-    if (soundCounter > SPEED*LENGTH) {
-      soundCounter = 0;
-    }
-    // write to the digital pins  
-    writeByte(sincount);
-}
-
 
 
 
