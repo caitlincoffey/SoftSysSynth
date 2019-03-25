@@ -59,8 +59,8 @@ int counter = 0;
 void loop() {
   counter += 8;
   if (counter > 255) counter = 0;
-  Serial.print(counter);
-  Serial.print(", ");
+//  Serial.print(counter);
+//  Serial.print(", ");
 
   // write to the digital pins  
   writeByte(counter);

@@ -26,9 +26,9 @@
 #define LENGTH1  240  // C3
 #define LENGTH2  226  // C#3
 #define LENGTH3  213  // D3
-#define LENGTH4  202  // The length of the waveform lookup table
-#define LENGTH5  190  // The length of the waveform lookup table
-#define LENGTH6  179  // The length of the waveform lookup table
+#define LENGTH4  202  // D#3
+#define LENGTH5  190  // E3
+#define LENGTH6  179  // F3
 byte squarewave1[LENGTH1];   // Storage for the waveform
 byte squarewave2[LENGTH2];   // Storage for the waveform
 byte squarewave3[LENGTH3];   // Storage for the waveform

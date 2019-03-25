@@ -11,6 +11,9 @@
  
  */
 
+ #include <stdio.h>
+ #include <stdlib.h>
+
  //Constants
 #define PI2     6.283185 // 2 * PI - saves calculating it later
 #define AMP     128      // Multiplication factor for the sine wave = Volume
@@ -23,12 +26,35 @@
   int counter = low;
 
 /******** Lookup table ********/
-#define LENGTH1  240  // C3
-#define LENGTH2  226  // C#3
-#define LENGTH3  213  // D3
-#define LENGTH4  202  // The length of the waveform lookup table
-#define LENGTH5  190  // The length of the waveform lookup table
-#define LENGTH6  179  // The length of the waveform lookup table
+// x will determine the octave of the note
+#define C( x )        (  240 - x*121 ) 
+#define C_SHARP( x )  (  226 - x*113 ) 
+#define D_FLAT( x )   (  226 - x*113 ) 
+#define D( x )        (  213 - x*107 ) 
+#define D_SHARP( x )  (  202 - x*102 ) 
+#define E_FLAT( x )   (  202 - x*102 ) 
+#define E( x )        (  190 - x*95 ) 
+#define F1( x )        (  179 - x*90 ) 
+#define F_SHARP( x )  (  169 - x*85 ) 
+#define G_FLAT( x )   (  169 - x*84 ) 
+#define G( x )        (  160 - x*81 ) 
+#define G_SHARP( x )  (  151 - x*76 ) 
+#define A_FLAT( x )   (  151 - x*75 ) 
+#define A( x )        (  142 - x*71 ) 
+#define A_SHARP( x )  ( 134 - x*67 ) 
+#define B_FLAT( x )   ( 134 - x*67 ) 
+#define B( x )        ( 127 - x*64 ) 
+
+
+#define LENGTH1  A_SHARP(0)  // C3
+#define LENGTH2  A_SHARP(1)  // C#3
+#define LENGTH3  B(0)  // D3
+#define LENGTH4  B(1)  // The length of the waveform lookup table
+#define LENGTH5  G_SHARP(0)  // The length of the waveform lookup table
+#define LENGTH6  G_SHARP(1)  // The length of the waveform lookup table
+
+int melody[] = {A(0), B(0), C(1)};
+
 byte squarewave1[LENGTH1];   // Storage for the waveform
 byte squarewave2[LENGTH2];   // Storage for the waveform
 byte squarewave3[LENGTH3];   // Storage for the waveform
@@ -122,7 +148,15 @@ void loop() {
 
   
   
-  if (!button1){ playSound(squarewave1, LENGTH1);}
+  if (!button1){ 
+    for(int i = 0; i < 3; i++){
+      int L = melody[i];
+      byte squarewave1[L];
+      buildSquareWave(squarewave1, L); 
+      playSound(squarewave1, L);
+      delay(50);
+    }
+      }
   
   if (!button2) {playSound(squarewave2, LENGTH2);}
   

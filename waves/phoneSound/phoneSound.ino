@@ -23,7 +23,7 @@ int buttonPin2 = 3;
 #define LENGTH  8  // The length of the waveform lookup table
 
 void setup() {
-  Serial.begin(9600);
+//  Serial.begin(9600);
   
   pinMode(buttonPin1, INPUT_PULLUP);  
   pinMode(buttonPin2, INPUT_PULLUP);  
