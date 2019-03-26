@@ -32,9 +32,7 @@ The wave is represented as an array of values. It gives the first half of the wa
 We play sounds by iterating through the values that make up the wave, and digitally sending those values to a series of pins on the Arduino. The value sent is directly correlated to an “effective voltage”, where the numbers sent in a range of 0-255 correspond to a voltage between 0-5V. Each pin outputs a single digit of the value (in binary); this is accomplished by only sending the last digit of the number to a pin and bit-shifting to the right by a single digit and sending the new last digit. 
 ```C
 void writeByte(byte x) {
-//  Actually writes the sound in binary
   int pin;
-  
   for (pin=13; pin>=6; pin--) {
     digitalWrite(pin, x&1);
     x >>= 1;
