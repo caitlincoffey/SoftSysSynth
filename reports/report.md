@@ -21,7 +21,28 @@ ___
 [![Video of our synthesizer in action] (https://img.youtube.com/vi/qqOoSs4LrUY&feature=youtu.be/0.jpg)](https://www.youtube.com/watch?v=qqOoSs4LrUY&feature=youtu.be)
 
 ### Implementation
-The circuit is set up to allow for different buttons to create unique sounds. We generate the waves that create our sounds at the start, so they can be accessed at any point throughout the process. We play sounds by iterating through the values that make up the wave, and digitally sending those values to a series of pins on the Arduino. The value sent is directly correlated to an “effective voltage”, where the numbers sent in a range of 0-255 correspond to a voltage between 0-5V. Each pin outputs a single digit of the value (in binary); this is accomplished by only sending the last digit of the number to a pin and bit-shifting to the right by a single digit and sending the new last digit. This is repeated until all of the digits have been sent. This creates a byte of information that is connected to an amplifier, which in turn connects to the speaker that plays the sound.
+The circuit is set up to allow for different buttons to create unique sounds. We generate the waves that create our sounds at the start, so they can be accessed at any point throughout the process. For example, here you can see a simple implementation of a square wave in code.
+```C
+for(int i = 0; i<LENGTH/2; i++){
+      squarewave[i] = 255;
+  }
+```
+The wave is represented as an array of values. It gives the first half of the wave the max value, and the second half the minimum (0 by default). It creates a single period of the wave, which is simply repeated as needed when the button is held for a long time.
+
+We play sounds by iterating through the values that make up the wave, and digitally sending those values to a series of pins on the Arduino. The value sent is directly correlated to an “effective voltage”, where the numbers sent in a range of 0-255 correspond to a voltage between 0-5V. Each pin outputs a single digit of the value (in binary); this is accomplished by only sending the last digit of the number to a pin and bit-shifting to the right by a single digit and sending the new last digit. 
+```C
+void writeByte(byte x) {
+//  Actually writes the sound in binary
+  int pin;
+  
+  for (pin=13; pin>=6; pin--) {
+    digitalWrite(pin, x&1);
+    x >>= 1;
+  }
+}
+```
+
+This process is repeated until all of the digits have been sent. The amplifier receives this byte of information, which in turn connects to the speaker that plays the sound.
 
 ### Hardware Changes
 We added 4 additional buttons to be able to toggle through additional different features. We added in a sliding potentiometer to control volume. However, for the final iteration we decided to remove it as there was a noticeable effect on the pitch. This was caused by the fact that the Arduino AnalogRead() functions takes nearly 20 times as long to execute as the DigitalRead() function.
