@@ -21,9 +21,8 @@ int buttonPin2 = 4;
 #define AMP     127      // Multiplication factor for the sine wave
 #define OFFSET  128      // Offset shifts wave to just positive values
 
-
+// This is like the time signature of the song- our songs are programmed in units of 16th notes
 #define STRIDE 2000
-
 
 
 /******** Lookup table ********/
@@ -47,11 +46,21 @@ int buttonPin2 = 4;
 #define B( x )        ( 127 - x*64 ) 
 #define R             (0)
 
-
+// length of the array
+int melody_length = 66;
 int melody[] = {E(0),E(0),E(0),E(0), G(0),G(0),G(0), E(0),E(0), R, E(0), A(0),A(0), E(0),E(0), D(0),D(0),
-                E(0),E(0),E(0),E(0), B(0),B(0),B(0), E(0),E(0), R, E(0), C_SHARP(1),C_SHARP(1), B(0),B(0), G(0),G(0),
+                E(0),E(0),E(0),E(0), B(0),B(0),B(0), E(0),E(0), R, E(0), C(1),C(1), B(0),B(0), G(0),G(0),
                 E(0),E(0), B(0),B(0), E(1),E(1), E(0), D(0), R, D(0), B(-1),B(-1), F_SHARP(0),F_SHARP(0), E(0),E(0),
-                E(0),E(0),E(0),E(0),E(0),E(0),E(0),E(0), R,R,R,R,R,R,R,R};
+                E(0),E(0),E(0),E(0),E(0),E(0),E(0),E(0), R,R,R,R,R,R,R,R
+                };
+
+int melody2_length = 72;
+int melody2[] = {G(0),G(0),G(0),R, G(0),G(0),G(0),R, G(0),G(0),G(0),R, E_FLAT(0),E_FLAT(0),E_FLAT(0), B_FLAT(0),
+                G(0),G(0),G(0),R, E_FLAT(0),E_FLAT(0),E_FLAT(0), B_FLAT(0), G(0),G(0),G(0),G(0),G(0),G(0),G(0),R,
+                D(1),D(1),D(1),R, D(1),D(1),D(1),R, D(1),D(1),D(1),R, E_FLAT(1),E_FLAT(1),E_FLAT(1),B_FLAT(0),
+                F_SHARP(0),F_SHARP(0),F_SHARP(0),F_SHARP(0), E_FLAT(0),E_FLAT(0),E_FLAT(0), B_FLAT(0), G(0),G(0),G(0),G(0),G(0),G(0),G(0),G(0),
+                R,R,R,R,R,R,R,R,R  
+                };
 
 void setup() {
   Serial.begin(9600);
@@ -83,6 +92,9 @@ void writeByte(int x) {
 }
 
 
+
+
+
 int stride_counter = 0;
 int wave_counter = 0;
 int sound_counter = 0;
@@ -94,6 +106,9 @@ void loop() {
   int button2 = digitalRead(buttonPin2);
 
   if (!button1){
+    // make sure the length is right, in between switching buttons
+    LENGTH = melody[sound_counter];
+  
     // LENGTH is given by the array, melody[]. It determines the pitch
     // STRIDE tells us how long we're playing this wave before moving on to the next note.
     stride_counter ++;
@@ -102,7 +117,7 @@ void loop() {
     if (stride_counter >= STRIDE){
       stride_counter = 0; // Reset the stride, change the note
       
-      if(sound_counter >= 56){ //hardcoded length of melody
+      if(sound_counter >= melody_length-1){
         sound_counter = 0;
       }
       else{
@@ -110,6 +125,48 @@ void loop() {
       }
 
       LENGTH = melody[sound_counter];
+      wave_counter = 0;
+    }
+
+    // val is the voltage sent to writeByte()
+    val = 255;
+
+    // this counter keeps track of where we are in the given waveform 
+    wave_counter ++;
+    
+    // Create the square wave: 1/2 of the LENGTH is high (255), and the other half is low (0).
+    if (wave_counter > LENGTH/2) {
+      val = 0;
+    }
+    if (wave_counter == LENGTH) {
+      wave_counter = 0;
+    }
+    
+    
+    // write to the digital pins  
+    writeByte(val);
+  }
+  
+  if (!button2) {
+    // make sure the length is right, in between switching buttons
+    LENGTH = melody2[sound_counter];
+  
+    // LENGTH is given by the array, melody[]. It determines the pitch
+    // STRIDE tells us how long we're playing this wave before moving on to the next note.
+    stride_counter ++;
+
+    // change the note by changing LENGTH when STRIDE is reached
+    if (stride_counter >= STRIDE){
+      stride_counter = 0; // Reset the stride, change the note
+      
+      if(sound_counter >= melody2_length){ 
+        sound_counter = 0;
+      }
+      else{
+        sound_counter ++;
+      }
+
+      LENGTH = melody2[sound_counter];
       wave_counter = 0;
     }
 
@@ -130,9 +187,6 @@ void loop() {
     
     // write to the digital pins  
     writeByte(val);
-  }
-  
-  if (!button2) {
 
   }
   else {
