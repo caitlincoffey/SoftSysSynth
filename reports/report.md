@@ -18,7 +18,7 @@ ___
 
 ## Results
 
-[![Video of our synthesizer in action] (https://img.youtube.com/vi/qqOoSs4LrUY&feature=youtu.be/0.jpg)](https://www.youtube.com/watch?v=qqOoSs4LrUY&feature=youtu.be)
+[Video of our synthesizer in action](https://img.youtube.com/vi/qqOoSs4LrUY&feature=youtu.be/0.jpg)
 
 ### Implementation
 The circuit is set up to allow for different buttons to create unique sounds. We generate the waves that create our sounds at the start, so they can be accessed at any point throughout the process. For example, here you can see a simple implementation of a square wave in code.
