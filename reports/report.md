@@ -73,15 +73,25 @@ After these waves, we created several other waveforms.
 ![alt text](https://github.com/mpatil99/SoftSysSynth/blob/master/TriangleInitial.JPG "Triangle Wave")
 
 While there were some cut-off issues in some of the waveforms, we found that these were due to hardware limitations and addressed these before moving on. 
-We found that the cleanest waveform was the square wave. We decided to proceed to our next goal of creating a song using the square waveforms
+We found that the cleanest waveform was the square wave. We decided to proceed to our next goal of creating a song using the square waveforms. <br>
+
+The code for this section can be found [here](https://github.com/mpatil99/SoftSysSynth/blob/master/waves/new_waves/new_waves.ino).
 
 ### Melody
 
-We realized that it wasn’t efficient to use fixed pre-generated arrays to create different pitches
+In order to program the synthesizer to play songs, we refactored our code into a cleaner format, using counters instead of arrays, in order to account for differences in length. The length of a waveform (frequency) is what changes pitch in our code. Drawing from pre-generated arrays would mean creating an array for each pitch, which would have been unnecessarily complicated. <br>
+
+Instead, we have one key of global variables that maps pitches with wave lengths. Each variable is like a function, including a formula for translating the note to different octaves. We obtained the note values by looking at [this](https://cdn.makezine.com/make/35/OCR2A-frequency-table.pdf) table, and then adjusting the values to suit our setup, by checking the resulting pitches against a pitch tuner. The code for this key is shown [here](https://github.com/mpatil99/SoftSysSynth/blob/9a47ebb94ed77027e66ba13f04f8292b5d4fa8f4/waves/melody/melody.ino#L28).<br>
 
 
-In order to program the synthesizer to play songs, we refactored our code into a cleaner format, using counters instead of arrays, in order to account for differences in length. The length of a waveform (frequency) is what changes pitch in our code. Drawing from pre-generated arrays would mean creating an array for each pitch, which would have been unnecessarily complicated. 
-INSERT IMAGES
+Our code creates a melody uses 3 counters:
+
++ wave_counter updates the waveform values during the main loop, to create the square wave shape. 
++ stride_counter keeps track of note length (STRIDE), so that all notes are the same length, despite having different wave lengths. 
++ sound_counter keeps track of what note to play, by indexing into an array of wave lengths, which will result in different frequencies, and thus, pitches. 
+
+The code for this section can be found [here](https://github.com/mpatil99/SoftSysSynth/blob/master/waves/melody/melody.ino).
+
 
 ## Accomplishments
 
