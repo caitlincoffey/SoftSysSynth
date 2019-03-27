@@ -5,7 +5,7 @@
 For this project, we wanted to create a synthesizer. We started off with a rather unclear idea of how the synthesizer worked, and what it was capable of. After clearing our confusion, we hoped to program the synthesizer to play any song, given a midi file. In our excitement, we scoped the project to be more than was feasible in the time left. 
 
 What we have produced is a synthesizer capable of producing several different waveforms, which have different sound textures. The machine can create a melody if it is programmed to play a predefined sequence of pitches.
-nnected to 6 buttons, and we are experimenting with having a different sound quality implemented by each button. We also have a slider that controls volume- another extension (if we have extra time) would be to give each button a slider for adjusting volume, or bending pitch. Ultimately, the result will be a synthesizer that allows you to mix whatever midi track you give it.  <br>
+It is connected to 6 buttons, and we are experimenting with having a different sound quality implemented by each button. We also have a slider that controls volume- another extension (if we have extra time) would be to give each button a slider for adjusting volume, or bending pitch. Ultimately, the result will be a synthesizer that allows you to mix whatever midi track you give it.  <br>
 
 ___
 
@@ -21,7 +21,7 @@ ___
 [Video of our synthesizer in action](https://img.youtube.com/vi/qqOoSs4LrUY&feature=youtu.be/0.jpg)
 
 ### Implementation
-The circuit is set up to allow for different buttons to create unique sounds. We generate the waves that create our sounds at the start, so they can be accessed at any point throughout the process. For example, here you can see a simple implementation of a square wave in code.
+The circuit is set up to allow for different buttons to create unique sounds. We started by generating the waves that create our sounds at the start, so they can be accessed at any point throughout the process. For example, here you can see a simple implementation of a square wave in code.
 ```C
 for(int i = 0; i<LENGTH/2; i++){
       squarewave[i] = 255;
@@ -29,7 +29,7 @@ for(int i = 0; i<LENGTH/2; i++){
 ```
 The wave is represented as an array of values. It gives the first half of the wave the max value, and the second half the minimum (0 by default). It creates a single period of the wave, which is simply repeated as needed when the button is held for a long time.
 
-We play sounds by iterating through the values that make up the wave, and digitally sending those values to a series of pins on the Arduino. The value sent is directly correlated to an “effective voltage”, where the numbers sent in a range of 0-255 correspond to a voltage between 0-5V. Each pin outputs a single digit of the value (in binary); this is accomplished by only sending the last digit of the number to a pin and bit-shifting to the right by a single digit and sending the new last digit. 
+We played sounds by iterating through the values that make up the wave, and digitally sending those values to a series of pins on the Arduino. The value sent is directly correlated to an “effective voltage”, where the numbers sent in a range of 0-255 correspond to a voltage between 0-5V. Each pin outputs a single digit of the value (in binary); this is accomplished by only sending the last digit of the number to a pin and bit-shifting to the right by a single digit and sending the new last digit. 
 ```C
 void writeByte(byte x) {
   int pin;
@@ -41,6 +41,26 @@ void writeByte(byte x) {
 ```
 
 This process is repeated until all of the digits have been sent. The amplifier receives this byte of information, which in turn connects to the speaker that plays the sound.
+
+### Melody
+
+In order to program the synthesizer to play songs, we refactored our code into a cleaner format, using counters instead of arrays, in order to account for differences in length. The length of a waveform (frequency) is what changes pitch in our code. Drawing from pre-generated arrays would mean creating an array for each pitch, which would have been unnecessarily complicated. <br>
+
+Instead, we have one key of global variables that maps pitches with wave lengths. Each variable is like a function, including a formula for translating the note to different octaves. We obtained the note values by looking at [this](https://cdn.makezine.com/make/35/OCR2A-frequency-table.pdf) table, and then adjusting the values to suit our setup, by checking the resulting pitches against a pitch tuner. The code for this key is shown [here](https://github.com/mpatil99/SoftSysSynth/blob/9a47ebb94ed77027e66ba13f04f8292b5d4fa8f4/waves/melody/melody.ino#L28).<br>
+
+
+Our code creates a melody uses 3 counters:
+
++ wave_counter updates the waveform values during the main loop, to create the square wave shape. 
++ stride_counter keeps track of note length (STRIDE), so that all notes are the same length, despite having different wave lengths. 
++ sound_counter keeps track of what note to play, by indexing into an array of wave lengths, which will result in different frequencies, and thus, pitches. 
+
+The code for this section can be found [here](https://github.com/mpatil99/SoftSysSynth/blob/master/waves/melody/melody.ino). <br>
+
+Below is an image of the melody being played, with the Crazy Frog song: 
+
+![alt text](https://github.com/mpatil99/SoftSysSynth/blob/master/Crazy%20Frog.JPG "Crazy Frog Melody")
+
 
 ### Hardware Changes
 We added 4 additional buttons to be able to toggle through additional different features. We added in a sliding potentiometer to control volume. However, for the final iteration we decided to remove it as there was a noticeable effect on the pitch. This was caused by the fact that the Arduino AnalogRead() functions takes nearly 20 times as long to execute as the DigitalRead() function.
@@ -77,43 +97,27 @@ We found that the cleanest waveform was the square wave. We decided to proceed t
 
 The code for this section can be found [here](https://github.com/mpatil99/SoftSysSynth/blob/master/waves/new_waves/new_waves.ino).
 
-### Melody
-
-In order to program the synthesizer to play songs, we refactored our code into a cleaner format, using counters instead of arrays, in order to account for differences in length. The length of a waveform (frequency) is what changes pitch in our code. Drawing from pre-generated arrays would mean creating an array for each pitch, which would have been unnecessarily complicated. <br>
-
-Instead, we have one key of global variables that maps pitches with wave lengths. Each variable is like a function, including a formula for translating the note to different octaves. We obtained the note values by looking at [this](https://cdn.makezine.com/make/35/OCR2A-frequency-table.pdf) table, and then adjusting the values to suit our setup, by checking the resulting pitches against a pitch tuner. The code for this key is shown [here](https://github.com/mpatil99/SoftSysSynth/blob/9a47ebb94ed77027e66ba13f04f8292b5d4fa8f4/waves/melody/melody.ino#L28).<br>
-
-
-Our code creates a melody uses 3 counters:
-
-+ wave_counter updates the waveform values during the main loop, to create the square wave shape. 
-+ stride_counter keeps track of note length (STRIDE), so that all notes are the same length, despite having different wave lengths. 
-+ sound_counter keeps track of what note to play, by indexing into an array of wave lengths, which will result in different frequencies, and thus, pitches. 
-
-The code for this section can be found [here](https://github.com/mpatil99/SoftSysSynth/blob/master/waves/melody/melody.ino).
-
-
 ## Accomplishments
 
-We were able to create different effects depending on what button was pressed on the circuit. These effects change what kind of wave is created to generate the sound;  they are stored in the code by mapping each button to its own wave type/pattern.
-INSERT IMAGE
+We were able to create different effects depending on what button was pressed on the circuit! Separately, we were able to adjust volume with a slider, and play a melody using square waves!
 
 ### Buttons
+
 With the starter code taken from the project description (in the resources section), the logic was set up in a way such that if a button is not pressed, it would hit a return statement to avoid making any sound. This structure makes it complicated to add functionality for more buttons, because if any of them are not triggered, it never reaches the section that makes sound. In order to get around this we flipped the logic, to where it only accesses the running sound code when the code for that button is pressed. 
 
 ### Volume Potentiometer
 
+Using a potentiometer and the built in analogRead() function, we were able to control the volume of the output. The output of the potentiometer was used to scale the sine wave being generated. One interesting flaw with this system was that using the analogRead function changed the pitch of the output. This was caused by the fact the digitalRead() takes approximately 4 nanoseconds, while analogRead() takes 100 nanoseconds. Below is the sound wave generated by adjusting the volume: 
 
-Using a potentiometer and the built in analogRead() function, we were able to control the volume of the output. The output of the potentiometer was used to scale the sine wave being generated. One interesting flaw with this system was that using the analogRead function changed the pitch of the output. This was caused by the fact the digitalRead() takes approximately 4 nanoseconds, while analogRead() takes 100 nanoseconds.
-INSERT IMAGE
+![alt text](https://github.com/mpatil99/SoftSysSynth/blob/master/Volume.JPG "Volume being adjusted live")
 
 ## Reflection
-We managed to reach our Minimal Viable product and further reach our stretch goal as well. One of the larger challenges we faced coming into this project was not having any idea of what the project would take the shape of. Had we started with a a clearer picture of where we wanted to go we may have been able to produce a higher level end product. However, the benefit of having a slightly more vague idea of our end goal allowed and encouraged far more exploration of and around the project. The group's goals were pretty effectively met in this process.  Overall, we learned quite a bit more about producing sounds and songs at a very low level. 
+
+We managed to reach our Minimal Viable product and further reach most our stretch goal as well. One of the larger challenges we faced coming into this project was not having any idea of what the project would take the shape of. Had we started with a a clearer picture of where we wanted to go we may have been able to produce a higher level end product. However, the benefit of having a slightly more vague idea of our end goal allowed for and encouraged far more exploration. The group's goals were pretty effectively met in this process.  Overall, we learned a lot about producing sounds and songs at a very low level. 
 
 ## Future plans: 
-Protothreading
 
-In order to convert a midi file into a set of frequencies that correlated to the actual pitch outputted by our synthesizer, we would have had to make the pitch more consistent, and map the midi file notes to the corresponding values that would provide the right frequencies.
+In the future, we would want to be able to convert any song into the array of notes format given to our code- this could be done by running a python script on midi files to generate the array. Additionally, we would want to code each button to continue playing the same song, with different waveforms, and include a slider for the volume, that would change the amplitude of the sound wave. In order to implement the volume change, we would have to read from the arduino during the main loop, and that would change the pitch. We'd have to refactor the way the wave is created, or introduce threading, or timers, to make this work.
 
 ## Resources
 
