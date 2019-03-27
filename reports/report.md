@@ -108,7 +108,7 @@ Using a potentiometer and the built in analogRead() function, we were able to co
 INSERT IMAGE
 
 ## Reflection
-We tried really hard. 
+We managed to reach our Minimal Viable product and further reach our stretch goal as well. One of the larger challenges we faced coming into this project was not having any idea of what the project would take the shape of. Had we started with a a clearer picture of where we wanted to go we may have been able to produce a higher level end product. However, the benefit of having a slightly more vague idea of our end goal allowed and encouraged far more exploration of and around the project. The group's goals were pretty effectively met in this process.  Overall, we learned quite a bit more about producing sounds and songs at a very low level. 
 
 ## Future plans: 
 Protothreading
