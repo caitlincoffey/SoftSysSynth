@@ -1,4 +1,4 @@
-# Synth: Arduino Sound Synthesizing Experiments
+# Synth: 8-Bit Music in C
 ### Team Members: Diego Berny, Emma Pan, Manu Patil
 
 ## Project Vision
