@@ -1,4 +1,4 @@
-# Synth: Experimenting with Sound Synthesizing on the Arduino
+# Synth: Arduino Sound Synthesizing Experiments
 ### Team Members: Diego Berny, Emma Pan, Manu Patil
 
 ## Project Vision
